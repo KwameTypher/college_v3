@@ -1,4 +1,4 @@
-USE `af25nicot1_college_V2`;
+USE `af25enoca1_college_V2`;
 
 -- ---------------------------
 -- Users (people)
