@@ -1,7 +1,7 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS af25enoca1_college_v3.AddStudentRecord;
+DROP PROCEDURE IF EXISTS sp_add_student;
 
-CREATE PROCEDURE af25enoca1_college_v3.AddStudentRecord(
+CREATE PROCEDURE sp_add_student(
     IN  p_first_name        VARCHAR(100),
     IN  p_last_name         VARCHAR(100),
     IN  p_dob               DATE,

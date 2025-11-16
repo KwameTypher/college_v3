@@ -1,6 +1,6 @@
 DELIMITER $$
 
-CREATE FUNCTION get_enrollment_count(section_id INT)
+CREATE FUNCTION f_get_enrollment_count(section_id INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN

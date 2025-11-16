@@ -3,9 +3,9 @@ DROP FUNCTION IF EXISTS af25enoca1_college_v3.get_student_semester_bill;
 
 DELIMITER $$
 
-DROP FUNCTION IF EXISTS af25enoca1_college_v3.get_student_semester_bill$$
+DROP FUNCTION IF EXISTS f_get_student_semester_bill$$
 
-CREATE FUNCTION af25enoca1_college_v3.get_student_semester_bill(
+CREATE FUNCTION f_get_student_semester_bill(
     p_student_id INT,
     p_term VARCHAR(50),
     p_year INT,

@@ -1,6 +1,6 @@
 DELIMITER $$
 
-CREATE FUNCTION get_available_seats(sectionId INT)
+CREATE FUNCTION f_get_available_seats(sectionId INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN

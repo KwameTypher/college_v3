@@ -1,7 +1,7 @@
 DELIMITER //
-DROP PROCEDURE IF EXISTS af25enoca1_college_v3.EnrollStudentInSection;
+DROP PROCEDURE IF EXISTS sp_enroll_student;
 
-CREATE PROCEDURE af25enoca1_college_v3.EnrollStudentInSection(
+CREATE PROCEDURE sp_enroll_student(
     IN student_id_param INT,
     IN semester_name_param VARCHAR(50),
     IN year_param INT,
