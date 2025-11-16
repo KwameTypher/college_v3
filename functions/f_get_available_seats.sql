@@ -16,10 +16,7 @@ BEGIN
     WHERE sr.section_id = sectionId;
 
     -- Count students currently enrolled
-    SELECT COUNT(*) 
-    INTO enrolled_count
-    FROM enrollment e
-    WHERE e.section_id = sectionId;
+    SET enrolled_count = f_get_enrollment_count(sectionId);
 
     -- Calculate remaining seats
     SET available = total_capacity - enrolled_count;
