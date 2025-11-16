@@ -1,5 +1,5 @@
 -- Function to calculate the current semester bill for a student
-DROP FUNCTION IF EXISTS af25enoca1_college_v3.get_student_semester_bill;
+DROP FUNCTION IF EXISTS af25enoca1_college_v3.f_get_student_semester_bill;
 
 DELIMITER $$
 
