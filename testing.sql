@@ -1,6 +1,6 @@
--- Testing EnrollStudentInSection stored procedure
-
-CALL af25enoca1_college_v3.EnrollStudentInSection(
+-- Testing enroll student stored procedure
+-- Good case: Valid enrollment
+CALL af25enoca1_college_v3.sp_enroll_student(
     283,                -- student_id_param
     'Fall',             -- semester_name_param
     2024,               -- year_param
@@ -12,12 +12,28 @@ CALL af25enoca1_college_v3.EnrollStudentInSection(
     @status_msg         -- OUT status_param
 );
 
+-- Error testing: invalid semester, invalid course code, year
+CALL af25enoca1_college_v3.sp_enroll_student(
+    279,                -- student_id_param
+    'Fall',             -- semester_name_param
+    202,               -- year_param
+    'CS',            -- course_code_param
+    1,                  -- created_userid_param
+    1,                  -- updated_userid_param
+    @enrollment_id,     -- OUT enrollment_id_param
+    @section_id,		-- OUT valid_section_id
+    @status_msg         -- OUT status_param
+);
 
 
 
--- Testing AddStudentRecord stored procedure
 
-CALL af25enoca1_college_V3.AddStudentRecord(
+
+
+
+-- Testing add student stored procedure
+
+CALL af25enoca1_college_V3.sp_add_student(
     'Liam',
     'Rodriguez',
     '2002-11-03',
@@ -39,7 +55,7 @@ CALL af25enoca1_college_V3.AddStudentRecord(
 
 
 
-CALL AddStudentRecord(
+CALL sp_add_student(
     'Sophia',
     'Patel',
     '2004-02-12',
@@ -60,7 +76,7 @@ CALL AddStudentRecord(
 );
 SELECT @new_user_id AS user_id, @new_student_id AS student_id, @status_message AS status_message;
 
-CALL AddStudentRecord(
+CALL sp_add_student(
     'Ethan',
     'Nguyen',
     '2001-09-10',
@@ -82,7 +98,7 @@ CALL AddStudentRecord(
 SELECT @new_user_id AS user_id, @new_student_id AS student_id, @status_message AS status_message;
 
 
-CALL AddStudentRecord(
+CALL sp_add_student(
     'Olivia',
     'Johnson',
     '2002-06-15',
@@ -104,7 +120,7 @@ CALL AddStudentRecord(
 SELECT @new_user_id AS user_id, @new_student_id AS student_id, @status_message AS status_message;
 
 
-CALL AddStudentRecord(
+CALL sp_add_student(
     'Mason',
     'Lee',
     '2003-01-27',
