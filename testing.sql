@@ -1,6 +1,6 @@
 -- Testing enroll student stored procedure
 -- Good case: Valid enrollment
-CALL af25enoca1_college_v3.sp_enroll_student(
+CALL sp_enroll_student(
     283,                -- student_id_param
     'Fall',             -- semester_name_param
     2024,               -- year_param
@@ -13,7 +13,7 @@ CALL af25enoca1_college_v3.sp_enroll_student(
 );
 
 -- Error testing: invalid semester, invalid course code, year
-CALL af25enoca1_college_v3.sp_enroll_student(
+CALL sp_enroll_student(
     279,                -- student_id_param
     'Fall',             -- semester_name_param
     202,               -- year_param
@@ -33,7 +33,7 @@ CALL af25enoca1_college_v3.sp_enroll_student(
 
 -- Testing add student stored procedure
 
-CALL af25enoca1_college_V3.sp_add_student(
+CALL sp_add_student(
     'Liam',
     'Rodriguez',
     '2002-11-03',

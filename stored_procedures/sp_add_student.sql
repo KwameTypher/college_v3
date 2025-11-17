@@ -88,7 +88,7 @@ BEGIN
 
         -- Additional logic validations
         SELECT s.id INTO v_valid_status_id
-        FROM af25enoca1_college_v3.status s
+        FROM status s
         WHERE LOWER(s.label) = LOWER(p_student_status)
         LIMIT 1;
 
@@ -99,7 +99,7 @@ BEGIN
         END IF;
 
         SELECT COUNT(*) INTO v_exists_count
-        FROM af25enoca1_college_v3.department d
+        FROM department d
         WHERE d.id = p_department_id;
 
         IF v_exists_count = 0 THEN
@@ -109,7 +109,7 @@ BEGIN
         END IF;
 
         SELECT COUNT(*) INTO v_exists_count
-        FROM af25enoca1_college_v3.`user` u
+        FROM `user` u
         WHERE u.email = p_email;
 
         IF v_exists_count > 0 THEN
@@ -119,7 +119,7 @@ BEGIN
         
         IF p_phone_number IS NOT NULL THEN
             SELECT COUNT(*) INTO v_exists_count
-            FROM af25enoca1_college_v3.`user` u
+            FROM `user` u
             WHERE u.phone_number = p_phone_number;
             IF v_exists_count > 0 THEN
                 SIGNAL SQLSTATE '45000'
@@ -129,7 +129,7 @@ BEGIN
 
         IF p_ssn IS NOT NULL THEN
             SELECT COUNT(*) INTO v_exists_count
-            FROM af25enoca1_college_v3.`user` u
+            FROM `user` u
             WHERE u.ssn = p_ssn;
             IF v_exists_count > 0 THEN
                 SIGNAL SQLSTATE '45000'
@@ -139,7 +139,7 @@ BEGIN
 
         IF p_university_id IS NOT NULL THEN
             SELECT COUNT(*) INTO v_exists_count
-            FROM af25enoca1_college_v3.`user` u
+            FROM `user` u
             WHERE u.university_id = p_university_id;
             IF v_exists_count > 0 THEN
                 SIGNAL SQLSTATE '45000'
@@ -147,7 +147,7 @@ BEGIN
             END IF;
         END IF;
 
-        INSERT INTO af25enoca1_college_v3.`user` (
+        INSERT INTO `user` (
             first_name, last_name, dob, address, email, phone_number,
             ssn, university_id, created_userid, updated_userid
         ) VALUES (
@@ -157,7 +157,7 @@ BEGIN
 
         SET p_new_user_id = LAST_INSERT_ID();
 
-        INSERT INTO af25enoca1_college_v3.student (
+        INSERT INTO student (
             user_id, status, department_id, admission_date, gpa, created_userid, updated_userid
         ) VALUES (
             p_new_user_id, v_valid_status_id, p_department_id, p_admission_date, p_gpa,

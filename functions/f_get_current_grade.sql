@@ -23,7 +23,7 @@ BEGIN
 	SELECT 
 		e.id
 	INTO v_enrollment_id FROM
-		af25enoca1_college_v3.enrollment e
+		enrollment e
 	WHERE
 		e.student_id = student_id
 			AND e.section_id = section_id
@@ -39,14 +39,14 @@ BEGIN
     SET hw = (
         SELECT CASE letter WHEN 'A' THEN 4 WHEN 'B' THEN 3 
               WHEN 'C' THEN 2 WHEN 'D' THEN 1 WHEN 'F' THEN 0 END
-        FROM af25enoca1_college_v3.grade
+        FROM grade
         WHERE enrollment_id = v_enrollment_id AND type = 1
     );
 
     SET qz = (
         SELECT CASE letter WHEN 'A' THEN 4 WHEN 'B' THEN 3 
               WHEN 'C' THEN 2 WHEN 'D' THEN 1 WHEN 'F' THEN 0 END
-        FROM af25enoca1_college_v3.grade
+        FROM grade
         WHERE enrollment_id = v_enrollment_id AND type = 2
         LIMIT 1
     );
@@ -54,7 +54,7 @@ BEGIN
     SET pr = (
         SELECT CASE letter WHEN 'A' THEN 4 WHEN 'B' THEN 3 
               WHEN 'C' THEN 2 WHEN 'D' THEN 1 WHEN 'F' THEN 0 END
-        FROM af25enoca1_college_v3.grade
+        FROM grade
         WHERE enrollment_id = v_enrollment_id AND type = 3
         LIMIT 1
     );
@@ -62,7 +62,7 @@ BEGIN
     SET mt = (
         SELECT CASE letter WHEN 'A' THEN 4 WHEN 'B' THEN 3 
               WHEN 'C' THEN 2 WHEN 'D' THEN 1 WHEN 'F' THEN 0 END
-        FROM af25enoca1_college_v3.grade
+        FROM grade
         WHERE enrollment_id = v_enrollment_id AND type = 4
         LIMIT 1
     );
@@ -70,7 +70,7 @@ BEGIN
     SET fe = (
         SELECT CASE letter WHEN 'A' THEN 4 WHEN 'B' THEN 3 
               WHEN 'C' THEN 2 WHEN 'D' THEN 1 WHEN 'F' THEN 0 END
-        FROM af25enoca1_college_v3.grade
+        FROM grade
         WHERE enrollment_id = v_enrollment_id AND type = 5
         LIMIT 1
     );
@@ -78,7 +78,7 @@ BEGIN
     SET pt = (
         SELECT CASE letter WHEN 'A' THEN 4 WHEN 'B' THEN 3 
               WHEN 'C' THEN 2 WHEN 'D' THEN 1 WHEN 'F' THEN 0 END
-        FROM af25enoca1_college_v3.grade
+        FROM grade
         WHERE enrollment_id = v_enrollment_id AND type = 6
         LIMIT 1
     );

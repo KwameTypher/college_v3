@@ -62,8 +62,8 @@ BEGIN
     -- 1. Check if student is active
     IF NOT EXISTS (
         SELECT 1
-        FROM af25enoca1_college_v3.student stu
-        JOIN af25enoca1_college_v3.status s ON stu.status = s.id
+        FROM student stu
+        JOIN status s ON stu.status = s.id
         WHERE stu.id = p_student_id AND LOWER(s.label) = 'active'
     ) THEN
         INSERT INTO tmp_enrollment_errors VALUES ('student_status', 'Student is not active and cannot be enrolled.');
@@ -73,7 +73,7 @@ BEGIN
 SELECT 
     sem.id
 INTO v_semester_id FROM
-    af25enoca1_college_v3.semester sem
+    semester sem
 WHERE
     LOWER(sem.term) = LOWER(p_semester_name)
         AND sem.year = p_year
@@ -87,7 +87,7 @@ LIMIT 1;
 SELECT 
     course.id
 INTO v_course_id FROM
-    af25enoca1_college_v3.course course
+    course course
 WHERE
     course.name LIKE CONCAT('%', p_course_code, '%')
 LIMIT 1;
@@ -100,7 +100,7 @@ LIMIT 1;
 SELECT 
     sec.id
 INTO p_section_id FROM
-    af25enoca1_college_v3.section sec
+    section sec
 WHERE
     sec.course_id = v_course_id
         AND sec.semester_id = v_semester_id
@@ -113,14 +113,14 @@ LIMIT 1;
     -- 5. Check if already enrolled
     IF EXISTS (
         SELECT 1
-        FROM af25enoca1_college_v3.enrollment e
+        FROM enrollment e
         WHERE e.student_id = p_student_id AND e.section_id = p_section_id
     ) THEN
         INSERT INTO tmp_enrollment_errors VALUES ('enrollment_duplicate', 'Student is already enrolled in this section.');
     END IF;
 
     -- 6. Check available seats
-    SET v_available_seats = af25enoca1_college_v3.f_get_available_seats(p_section_id);
+    SET v_available_seats = f_get_available_seats(p_section_id);
     IF v_available_seats <= 0 THEN
         INSERT INTO tmp_enrollment_errors VALUES ('available_seats', 'No available seats in this section.');
     END IF;
@@ -135,7 +135,7 @@ LIMIT 1;
     ELSE
 
     -- 7. Insert enrollment
-    INSERT INTO af25enoca1_college_v3.enrollment (
+    INSERT INTO enrollment (
         student_id,
         section_id,
         created_userid,
