@@ -322,7 +322,7 @@ Calculates the number of available seats remaining in a specific course section.
 
 **Parameters:**
 
-- `sectionId` (INT) – The ID of the section
+- `p_section_id` (INT) – The ID of the section
 
 **Returns:**
 
@@ -475,6 +475,49 @@ Validates a gender value against approved options.
 
 ---
 
+#### [`f_get_remaining_credits`](functions/f_get_remaining_credits.sql)
+
+**Purpose:**  
+Calculates how many academic credits a student still needs to reach the 120-credit graduation requirement.
+
+**Parameters:**
+
+- `p_student_id` (INT) – The ID of the student
+
+**Returns:**
+
+- INT – Number of remaining credits (never negative)
+
+**Logic:**  
+Counts all distinct course sections completed by the student, calculates total earned credits by multiplying by 3 (credits per course), subtracts that from the 120-credit requirement, and returns the remaining credits (minimum of 0).
+
+---
+
+#### [`f_is_room_free`](functions/f_is_room_free.sql)
+
+**Purpose:**  
+Determines whether a room is available (free) during a specific time range on specified days of the week.
+
+**Parameters:**
+
+- `p_room_id` (INT) – The ID of the room  
+- `p_start_time` (TIME) – Proposed start time  
+- `p_end_time` (TIME) – Proposed end time  
+- `p_dow` (VARCHAR(10)) – Days of the week (e.g., 'MWF', 'TR')
+
+**Returns:**
+
+- TINYINT(1) – 1 if the room is free, 0 if there is a conflict
+
+**Logic:**  
+Checks all scheduled sections assigned to the room and determines if any overlap exists based on:  
+- Matching days between the section and the requested days (M, T, W, R, F)  
+- Overlapping time ranges (`p_start_time < end_time` AND `p_end_time > start_time`)  
+
+If no conflicts are found, the function returns 1; otherwise it returns 0.
+
+---
+
 ## Stored Procedures
 
 ### Student Management Procedures
@@ -538,6 +581,69 @@ Validates that the student is active, looks up the semester and course, finds th
 
 **Returns:**  
 Success returns the enrollment ID and section ID; failure returns NULL with a descriptive status message.
+
+---
+
+#### [`sp_calculate_grades`](stored_procedures/sp_calculate_grades.sql)
+
+**Purpose:**  
+Calculates and updates final letter grades for all active students enrolled in a specific course section. The procedure iterates through each student, computes their weighted grade using `f_get_current_grade`, and inserts or updates the final grade record (type 7).
+
+**Parameters:**
+
+_Input:_
+
+- `p_section_id` (INT) – The ID of the section whose students’ grades will be calculated
+
+_Output:_  
+_None_
+
+**Logic:**  
+Verifies that the section exists, then opens a cursor to iterate through all active students enrolled in the section. For each student, the procedure:
+
+1. Retrieves the enrollment record  
+2. Calls `f_get_current_grade` to compute the final letter grade  
+3. Either updates the existing final grade entry (type 7) or inserts a new one  
+4. Handles SQL exceptions by rolling back, capturing diagnostic information, and signaling a detailed error
+
+Operations are wrapped in a transaction to ensure consistency.
+
+**Returns:**  
+Does not return a result set. On success, all student final grades are updated or created. On failure, the procedure signals a detailed error message and rolls back all changes.
+
+---
+
+#### [`sp_create_section`](stored_procedures/sp_create_section.sql)
+
+**Purpose:**  
+Creates a new course section for a given semester, assigns an instructor, schedules meeting times, and optionally attaches one or more rooms. Includes validation for all foreign keys and room availability.
+
+**Parameters:**
+
+_Input:_
+
+- `p_semester_id` (INT) – ID of the semester  
+- `p_course_id` (INT) – ID of the course  
+- `p_instructor_id` (INT) – ID of the instructor  
+- `p_dow` (VARCHAR(7)) – Days of the week (e.g., MWF, TR)  
+- `p_start_time` (TIME) – Section start time  
+- `p_end_time` (TIME) – Section end time  
+- `p_created_userid` (INT) – Audit user ID  
+- `p_room_ids` (VARCHAR(9)) – Optional comma-separated list of room IDs
+
+_Output:_
+
+- `p_section_id` (INT) – The ID of the newly created section
+
+**Logic:**  
+Begins a transaction and validates all foreign key references (semester, course, instructor). Inserts the new section record and captures its ID.  
+If room IDs are provided, the procedure parses the comma-separated list, validates each room, checks availability using `f_is_room_free`, and inserts corresponding `section_room` assignments.  
+
+Comprehensive error handling captures diagnostic details on failure, rolls back the transaction, and signals a formatted error message.
+
+**Returns:**  
+On success, returns the newly created `section_id`.  
+On failure, the transaction is rolled back and a descriptive SQL error is thrown.
 
 ---
 

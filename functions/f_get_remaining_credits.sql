@@ -1,6 +1,6 @@
 DELIMITER $$
 
-CREATE FUNCTION f_get_remaining_credits(p_studentId INT)
+CREATE FUNCTION f_get_remaining_credits(p_student_id INT)
 RETURNS INT
 DETERMINISTIC
 BEGIN
@@ -12,7 +12,7 @@ BEGIN
 	SELECT COUNT(DISTINCT section_id) AS total_sections
     INTO v_total_classes
 	FROM enrollment
-	WHERE student_id = p_studentId;
+	WHERE student_id = p_student_id;
     
     -- Multiply the amount of classes to get the credits
 	SET v_completed_credits = v_total_classes * 3;
