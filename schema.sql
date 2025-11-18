@@ -199,9 +199,11 @@ CREATE TABLE IF NOT EXISTS `af25nicot1_college_V3`.`student` (
   `updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_userid` INT NOT NULL,
   `department_id` INT NOT NULL,
+  `department_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
   INDEX `fk_student_status1_idx` (`status` ASC) VISIBLE,
+  INDEX `fk_student_department1_idx` (`department_id` ASC) VISIBLE,
   INDEX `fk_student_department1_idx` (`department_id` ASC) VISIBLE,
   CONSTRAINT `fk_student_user`
     FOREIGN KEY (`user_id`)
