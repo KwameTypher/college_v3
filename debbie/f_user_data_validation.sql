@@ -1,42 +1,49 @@
 DELIMITER $$
 
-CREATE OR REPLACE FUNCTION f_validate_first_name(p_first VARCHAR(255))
+CREATE OR REPLACE FUNCTION f_validate_first_name(p_first_name VARCHAR(255))
 RETURNS VARCHAR(255)
 DETERMINISTIC -- the function always returns the same result given the same input parameters
 BEGIN
-  IF p_first IS NULL OR p_first = '' THEN
+  IF p_first_name IS NULL OR p_first_name = '' THEN
     RETURN 'First name is required';
-  ELSEIF p_first NOT REGEXP '^[A-Za-z][A-Za-z \\-\\'']{0,99}$' THEN
+  ELSEIF p_first_name NOT REGEXP '^[A-Za-z][A-Za-z \\-\\'']{0,99}$' THEN
     RETURN 'First name may contain only letters, spaces, hyphens, or apostrophes';
   END IF;
   RETURN NULL;
 END$$
 
-CREATE OR REPLACE FUNCTION f_validate_last_name(p_last VARCHAR(255))
+
+CREATE OR REPLACE FUNCTION f_validate_last_name(p_last_name VARCHAR(255))
 RETURNS VARCHAR(255)
 DETERMINISTIC -- the function always returns the same result given the same input parameters
 BEGIN
-  IF p_last IS NULL OR p_last = '' THEN
+  IF p_last_name IS NULL OR p_last_name = '' THEN
     RETURN 'Last name is required';
-  ELSEIF p_last NOT REGEXP '^[A-Za-z][A-Za-z \\-\\'']{0,99}$' THEN
+  ELSEIF p_last_name NOT REGEXP '^[A-Za-z][A-Za-z \\-\\'']{0,99}$' THEN
     RETURN 'Last name may contain only letters, spaces, hyphens, or apostrophes';
   END IF;
   RETURN NULL;
 END$$
 
-CREATE OR REPLACE FUNCTION f_validate_dob(p_dob DATE)
+
+CREATE OR REPLACE FUNCTION f_validate_date_of_birth(p_date_of_birth VARCHAR(255))
 RETURNS VARCHAR(255)
 DETERMINISTIC -- the function always returns the same result given the same input parameters
 BEGIN
-  IF p_dob IS NULL THEN
+  IF p_date_of_birth IS NULL OR p_date_of_birth = '' IS NULL THEN
     RETURN 'Date of birth is required';
-  ELSEIF p_dob > CURDATE() THEN
+  ELSEIF p_date_of_birth NOT REGEXP '^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$' THEN
+    RETURN 'Date must be in YYYY-MM-DD format';
+  ELSEIF DATE(p_date_of_birth) IS NULL THEN
+    RETURN 'Invalid calendar date';    
+  ELSEIF p_date_of_birth > CURDATE() THEN
     RETURN 'Date of birth cannot be in the future';
-  ELSEIF TIMESTAMPDIFF(YEAR, p_dob, CURDATE()) < 14 THEN
+  ELSEIF TIMESTAMPDIFF(YEAR, p_date_of_birth, CURDATE()) < 14 THEN
     RETURN 'User must be at least 14 years old';
   END IF;
   RETURN NULL;
 END$$
+
 
 CREATE OR REPLACE FUNCTION f_validate_gender(p_gender CHAR(1))
 RETURNS VARCHAR(255)
@@ -47,6 +54,7 @@ BEGIN
   END IF;
   RETURN NULL;
 END$$
+
 
 CREATE OR REPLACE FUNCTION f_validate_email(p_email VARCHAR(255))
 RETURNS VARCHAR(255)
